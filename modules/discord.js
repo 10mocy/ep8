@@ -2,6 +2,7 @@ require('date-utils');
 
 const Discord = require('discord.js');
 client = new Discord.Client();
+exports.client = client;
 
 const discord_config = require('../config/discord');
 
@@ -25,7 +26,7 @@ module.exports = () => {
 
   client.on('message', msg => {
     if (msg.author.id === client.user.id) {
-      console.log(`modules.discord[message] : skipped my message`);
+      // console.log(`modules.discord[message] : skipped my message`);
       return;
     }
 
