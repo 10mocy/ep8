@@ -66,7 +66,7 @@ client.on('ready', () => {
 
 client.on('message', msg => {
   if (msg.author.id === client.user.id) return;
-  if (msg.channel.id != "487171776049315851") return;
+  if (msg.channel.id != notify_channel) return;
   if (msg.content === 'ping') {
     msg.channel.send('Pong!');
   } else if (msg.content === '神') {
