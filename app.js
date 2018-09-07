@@ -179,7 +179,7 @@ client.on('message', msg => {
       console.log(`app[message] : 誰が管理`);
       msg.channel.send(`${general_config.owner}さんです！`);
     }
-    else if (/変数出力/.test(msg.content)) {
+    else if(/変数出力/.test(msg.content)) {
       console.log(`app[message] : 変数出力`);
       msg.channel.send(`ここで言うのは少し恥ずかしいので、別の場所でお願いします…///`)
     }
@@ -191,11 +191,15 @@ client.on('message', msg => {
       console.log(`app[message] : 問題の報告`);
       msg.channel.send(`${general_config.issues} からお願いします！`);
     }
-    else if (msg.content === '神') {
+    else if(msg.content === '神') {
       console.log(`app[message] : 神`);
       msg.channel.send('てへへ');
     }
-    else if (msg.content === 'かわいい') {
+    else if(msg.content === '草') {
+      console.log(`app[message] : 草`);
+      msg.react('🌿');
+    }
+    else if(msg.content === 'かわいい') {
       msg.react('❤');
       console.log(`app[message] : かわいい`);
       msg.channel.send('ありがとうございます！');
