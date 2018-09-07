@@ -4,10 +4,14 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
+    "async": "^2.6.1",
+    "cheerio": "^1.0.0-rc.2",
     "date-utils": "^1.2.21",
     "discord.js": "^11.4.2",
+    "iconv-lite": "^0.4.24",
     "request": "^2.88.0",
-    "sync-request": "^6.0.0"
+    "sync-request": "^6.0.0",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {},
   "scripts": {
