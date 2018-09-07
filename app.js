@@ -12,9 +12,11 @@ const notify_channel = '487171776049315851';
 let eq_list = { };
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(`app[ready] : Logged in as ${client.user.tag}!`);
 
   setInterval(() => {
+    console.log(`app[setInterval]`);
+    
     const ei = km();
     // console.log(ei);
 
@@ -23,10 +25,12 @@ client.on('ready', () => {
       if(ei.report_id < startup_time) return; // 起動時の時間より前の発表を無視する(#2)
 
       if(!(ei.report_id in eq_list)) {
+        console.log(`app[setInterval] : new eq`);
         eq_list[ei.report_id] = [];
       }
 
       if(eq_list[ei.report_id].indexOf(ei.report_num) === -1) {
+        console.log(`app[setInterval] : new eq report`);
         eq_list[ei.report_id].push(ei.report_num);
 
         client.channels
@@ -73,8 +77,16 @@ client.on('ready', () => {
 });
 
 client.on('message', msg => {
-  if (msg.author.id === client.user.id) return;
-  if (msg.channel.id != notify_channel) return;
+  if (msg.author.id === client.user.id) {
+    console.log(`app[message] : skipped my message`);
+    return;
+  }
+
+  if (msg.channel.id != notify_channel) {
+    console.log(`app[message] : skipped different channel`);
+    return;
+  }
+  
   if (msg.content === 'ping') {
     msg.channel.send('Pong!');
   } else if (msg.content === '神') {
