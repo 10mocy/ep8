@@ -1,7 +1,9 @@
 require('date-utils');
 const startup_time = (new Date()).toFormat('YYYYMMDDHH24MISS');
 
+const general_config = require('./config/general');
 const discord_config = require('./config/discord');
+
 const km = require('./lib/km');
 
 const Discord = require('discord.js');
@@ -82,37 +84,55 @@ client.on('message', msg => {
     return;
   }
 
-  if (msg.channel.id != discord_config.control_channel) {
-    console.log(`app[message] : skipped different channel`);
-    return;
+  if (msg.channel.id === discord_config.control_channel) {
+    /* 以下コンパネ用設定 */
+    if (/変数出力/.test(msg.content)) {
+      console.log(`app[message]<control> : 変数出力`);
+      msg.channel.send({
+        embed: {
+          color: parseInt("0x222222", 16),
+          description: 'わたしが今持っている変数です！',
+          fields: [
+            { name: 'startup_time',
+              value: startup_time,
+              inline: true },
+            { name: 'eq_list',
+              value: `\`\`\`${JSON.stringify(eq_list)}\`\`\``,
+              inline: true },
+            { name: 'discord_config.notify_channel',
+              value: discord_config.notify_channel,
+              inline: true },
+            { name: 'discord_config.control_channel',
+              value: discord_config.control_channel,
+              inline: true }
+          ]
+        }
+      });
+    }
+  } else {
+    /* どのチャンネルでも実行できるコマンド */
+    if(/誰が管理/.test(msg.content)) {
+      console.log(`app[message] : 誰が管理`);
+      msg.channel.send(`${general_config.owner}さんです！`);
+    }
+    else if (/変数出力/.test(msg.content)) {
+      console.log(`app[message] : 変数出力`);
+      msg.channel.send(`ここで言うのは少し恥ずかしいので、別の場所でお願いします…///`)
+    }
+    else if(/リポジトリのURL/.test(msg.content)) {
+      console.log(`app[message] : リポジトリのURL`);
+      msg.channel.send(`${general_config.repository} です！`);
+    }
+    else if(/問題の報告/.test(msg.content)) {
+      console.log(`app[message] : 問題の報告`);
+      msg.channel.send(`${general_config.issues} からお願いします！`);
+    }
+    else if (msg.content === '神') {
+      console.log(`app[message] : 神`);
+      msg.channel.send('てへへ');
+    }
   }
-  
-  if (/変数出力/.test(msg.content)) {
-    console.log(`app[message] : 変数出力`);
-    msg.channel.send({
-      embed: {
-        color: parseInt("0x222222", 16),
-        description: 'わたしが今持っている変数です！',
-        fields: [
-          { name: 'startup_time',
-            value: startup_time,
-            inline: true },
-          { name: 'eq_list',
-            value: `\`\`\`${JSON.stringify(eq_list)}\`\`\``,
-            inline: true },
-          { name: 'discord_config.notify_channel',
-            value: discord_config.notify_channel,
-            inline: true },
-          { name: 'discord_config.control_channel',
-            value: discord_config.control_channel,
-            inline: true }
-        ]
-      }
-    });
 
-  } else if (msg.content === '神') {
-    msg.channel.send('てへへ');
-  }
 });
 
 
