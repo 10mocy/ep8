@@ -65,15 +65,16 @@ exports.nhk = () => {
       }
       nhkeq_list.push(eq_data.$.Id);
 
-      const timestamp = (new Date(eq_data.$.Timestamp)).toFormat('YYYYMMDDHH24MISS');
+      const timestamp = new Date(eq_data.$.Time);
+
       if(timestamp < app.startup_time) {
         console.log(`modules.eq[nhk] : skipped report of before start up`);
         return;
       } // 起動時の時間より前の発表を無視する(#2)
 
-      console.log(`app[nhkeq] : new eq`);
+      console.log(`modules.eq[nhk] : new eq`);
       app.client.channels
-        .get(discord_config.notify_channel)
+        .get('487259165660545036')
         .send(
           {
             embed: {
