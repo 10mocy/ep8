@@ -91,6 +91,13 @@ client.on('ready', () => {
         xml2js.parseString(nhkeq_xml, (err, result) => {
             const eq_data = result.Root.Earthquake[0];
 
+            const date = (new Date(eq_data.$.Time)).toFormat('YYYYMMDDHH24MISS');
+
+            if(date < startup_time) {
+              console.log(`app[message] : skipped report of before start up`);
+              return;
+            } // 起動時の時間より前の発表を無視する(#2)
+            
             // console.log(eq_data.$.Id)
             if(nhkeq_list.indexOf(eq_data.$.Id) !== -1) {
               // console.log(`nhkeq : skipped duplicate data`);
