@@ -88,6 +88,7 @@ client.on('message', msg => {
   }
   
   if (/変数出力/.test(msg.content)) {
+    console.log(`app[message] : 変数出力`);
     msg.channel.send({
       embed: {
         color: parseInt("0x222222", 16),
