@@ -5,11 +5,17 @@ const general_config = require('./config/general');
 const discord_config = require('./config/discord');
 
 const km = require('./lib/km');
+const nhkeq = require('./lib/nhkeq');
 
-const Discord = require('discord.js');
-const client = new Discord.Client();
+const request = require('sync-request');
+const iconv = require('iconv-lite');
+const xml2js = require("xml2js");
+const { Client, RichEmbed } = require('discord.js');
+
+const client = new Client();
 
 let eq_list = { };
+let nhkeq_list = [];
 
 client.on('ready', () => {
   console.log(`app[ready] : logged in as ${client.user.tag}!`);
@@ -41,7 +47,7 @@ client.on('ready', () => {
           .send(
             {
               embed: {
-                description: `地震速報(高度利用) 第${ei.report_num}報`,
+                title: `地震速報(高度利用) 第${ei.report_num}報`,
                 color: parseInt("0xff0000", 16),
                 fields: [
                   { name: '発生時刻',
@@ -65,7 +71,51 @@ client.on('ready', () => {
           );
       }
     }
-  }, 500);
+  }, 500); // 高度利用者向け地震情報
+
+  setInterval(() => {
+    const res = request(
+        'GET',
+        'http://www3.nhk.or.jp/sokuho/jishin/data/JishinReport.xml'
+    );
+    const buf = new Buffer(res.getBody(), 'binary');
+    const nhkeq_xml = iconv.decode(buf, 'Shift_JIS');
+    xml2js.parseString(nhkeq_xml, (err, result) => {
+        const url = result.jishinReport.record[0].item[0].$.url;
+        const res = request(
+            'GET',
+            url
+        );
+        const buf = new Buffer(res.getBody(), 'binary');
+        const nhkeq_xml = iconv.decode(buf, 'Shift_JIS');
+        xml2js.parseString(nhkeq_xml, (err, result) => {
+            const eq_data = result.Root.Earthquake[0];
+
+            // console.log(eq_data.$.Id)
+            if(nhkeq_list.indexOf(eq_data.$.Id) !== -1) {
+              // console.log(`nhkeq : skipped duplicate data`);
+              return;
+            }
+            console.log(`nhkeq : new eq data`);
+            client.channels
+              .get(discord_config.notify_channel)
+              .send(
+                {
+                  embed: {
+                    color: parseInt('0xff0000', 16),
+                    title: `NHK地震情報 ${eq_data.$.Id}`,
+                    description: `${eq_data.$.Time}頃、${eq_data.$.Epicenter}で、最大震度${eq_data.$.Intensity}の揺れを観測する地震がありました。\n震源の深さは${eq_data.$.Depth}。地震の規模を示すマグニチュードは、${eq_data.$.Magnitude}と推定されています。`,
+                    image: {
+                      url: `https://www3.nhk.or.jp/sokuho/jishin/${eq_data.Detail[0]}`
+                    }
+                  }
+                }
+              );
+            nhkeq_list.push(eq_data.$.Id);
+        });
+
+    })
+  }, 1000 * 30); // NHK地震情報
 
   client.user.setActivity("日本の地下で眠っています……");
   // client.channels
@@ -99,6 +149,9 @@ client.on('message', msg => {
               inline: true },
             { name: 'eq_list',
               value: `\`\`\`${JSON.stringify(eq_list)}\`\`\``,
+              inline: true },
+            { name: 'nhkeq_list',
+              value: `\`\`\`${JSON.stringify(nhkeq_list)}\`\`\``,
               inline: true },
             { name: 'discord_config.notify_channel',
               value: discord_config.notify_channel,
@@ -156,6 +209,10 @@ client.on('message', msg => {
     else if(/[♡❤]/.test(msg.content)) {
       console.log(`app[message] : :heart:`);
       msg.react('❤');
+    }
+    else if(/[✌]/.test(msg.content)) {
+      console.log(`app[message] : :tada:`);
+      msg.react('🎉');
     }
   }
 
