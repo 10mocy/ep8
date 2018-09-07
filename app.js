@@ -1,13 +1,11 @@
 require('date-utils');
 const startup_time = (new Date()).toFormat('YYYYMMDDHH24MISS');
 
-const token = require('./config/discord_token');
+const discord_config = require('./config/discord');
 const km = require('./lib/km');
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
-
-const notify_channel = '487171776049315851';
 
 let eq_list = { };
 
@@ -36,7 +34,7 @@ client.on('ready', () => {
         eq_list[ei.report_id].push(ei.report_num);
 
         client.channels
-          .get(notify_channel)
+          .get(discord_config.notify_channel)
           .send(
             {
               embed: {
@@ -68,7 +66,7 @@ client.on('ready', () => {
 
   client.user.setActivity("日本の地下で眠っています……");
   // client.channels
-  //   .get(notify_channel)
+  //   .get(discord_config.notify_channel)
   //   .send(
   //     {
   //       embed: {
@@ -84,7 +82,7 @@ client.on('message', msg => {
     return;
   }
 
-  if (msg.channel.id != notify_channel) {
+  if (msg.channel.id != discord_config.notify_channel) {
     console.log(`app[message] : skipped different channel`);
     return;
   }
