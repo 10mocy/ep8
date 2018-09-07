@@ -15,14 +15,16 @@ client.on('ready', () => {
   console.log(`app[ready] : Logged in as ${client.user.tag}!`);
 
   setInterval(() => {
-    console.log(`app[setInterval]`);
     
     const ei = km();
     // console.log(ei);
 
     if(ei) {
       // console.log(eq_list);
-      if(ei.report_id < startup_time) return; // 起動時の時間より前の発表を無視する(#2)
+      if(ei.report_id < startup_time) {
+        console.log(`app[message] : skipped report of before start up`);
+        return;
+      } // 起動時の時間より前の発表を無視する(#2)
 
       if(!(ei.report_id in eq_list)) {
         console.log(`app[setInterval] : new eq`);
