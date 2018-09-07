@@ -82,13 +82,27 @@ client.on('message', msg => {
     return;
   }
 
-  if (msg.channel.id != discord_config.notify_channel) {
+  if (msg.channel.id != discord_config.control_channel) {
     console.log(`app[message] : skipped different channel`);
     return;
   }
   
-  if (msg.content === 'ping') {
-    msg.channel.send('Pong!');
+  if (/変数出力/.test(msg.content)) {
+    msg.channel.send({
+      embed: {
+        color: parseInt("0x222222", 16),
+        description: 'わたしが今持っている変数です！',
+        fields: [
+          { name: 'startup_time',
+            value: startup_time,
+            inline: true },
+          { name: 'eq_list',
+            value: `\`\`\`${JSON.stringify(eq_list)}\`\`\``,
+            inline: true }
+        ]
+      }
+    });
+
   } else if (msg.content === '神') {
     msg.channel.send('てへへ');
   }
