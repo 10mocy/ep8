@@ -109,8 +109,18 @@ client.on('message', msg => {
         }
       });
     }
+    else if(/落ちろ/.test(msg.content)) {
+      console.log(`app[message]<control> : 落ちろ`);
+      msg.channel
+        .send(`出直してきます！`)
+        .then(message => {
+          process.exit(0);
+        });
+    }
   } else {
     /* どのチャンネルでも実行できるコマンド */
+    // console.log(msg.content);
+
     if(/誰が管理/.test(msg.content)) {
       console.log(`app[message] : 誰が管理`);
       msg.channel.send(`${general_config.owner}さんです！`);
@@ -123,13 +133,28 @@ client.on('message', msg => {
       console.log(`app[message] : リポジトリのURL`);
       msg.channel.send(`${general_config.repository} です！`);
     }
-    else if(/問題の報告/.test(msg.content)) {
+    else if(/問題の報告|機能の追加/.test(msg.content)) {
       console.log(`app[message] : 問題の報告`);
       msg.channel.send(`${general_config.issues} からお願いします！`);
     }
     else if (msg.content === '神') {
       console.log(`app[message] : 神`);
       msg.channel.send('てへへ');
+    }
+    else if (msg.content === 'かわいい') {
+      msg.react('❤');
+      console.log(`app[message] : かわいい`);
+      msg.channel.send('ありがとうございます！');
+    }
+
+    /* 半分ネタ枠 */
+    else if(/は？/.test(msg.content)) {
+      console.log(`app[message] : は？`);
+      msg.react('🤔');
+    }
+    else if(/[♡❤]/.test(msg.content)) {
+      console.log(`app[message] : :heart:`);
+      msg.react('❤');
     }
   }
 
