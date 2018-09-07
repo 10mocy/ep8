@@ -109,6 +109,14 @@ client.on('message', msg => {
         }
       });
     }
+    else if(/落ちろ/.test(msg.content)) {
+      console.log(`app[message]<control> : 落ちろ`);
+      msg.channel
+        .send(`出直してきます！`)
+        .then(message => {
+          process.exit(0);
+        });
+    }
   } else {
     /* どのチャンネルでも実行できるコマンド */
     // console.log(msg.content);
@@ -125,7 +133,7 @@ client.on('message', msg => {
       console.log(`app[message] : リポジトリのURL`);
       msg.channel.send(`${general_config.repository} です！`);
     }
-    else if(/問題の報告/.test(msg.content)) {
+    else if(/問題の報告|機能の追加/.test(msg.content)) {
       console.log(`app[message] : 問題の報告`);
       msg.channel.send(`${general_config.issues} からお願いします！`);
     }
@@ -134,6 +142,7 @@ client.on('message', msg => {
       msg.channel.send('てへへ');
     }
     else if (msg.content === 'かわいい') {
+      msg.react('❤');
       console.log(`app[message] : かわいい`);
       msg.channel.send('ありがとうございます！');
     }
