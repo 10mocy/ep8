@@ -1,10 +1,13 @@
+require('date-utils');
+const startup_time = new Date();
+
 const token = require('./config/discord_token');
 const km = require('./lib/km');
 
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const notify_channel = '487171776049315851';
+const notify_channel = '487259165660545036';
 
 let eq_list = { };
 
@@ -12,13 +15,17 @@ client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 
   setInterval(() => {
-    let ei;
-    if(ei = km()) {
+    const ei = km();
+    // console.log(ei);
+
+    if(ei) {
+      // console.log(eq_list);
+
       if(!(ei.report_id in eq_list)) {
         eq_list[ei.report_id] = [];
       }
 
-      if(!(ei.report_num in eq_list[ei.report_id])) {
+      if(eq_list[ei.report_id].indexOf(ei.report_num) === -1) {
         eq_list[ei.report_id].push(ei.report_num);
 
         client.channels
@@ -26,23 +33,23 @@ client.on('ready', () => {
           .send(
             {
               embed: {
-                description: `地震速報(高度利用) 第${body.report_num}報`,
+                description: `地震速報(高度利用) 第${ei.report_num}報`,
                 color: parseInt("0xff0000", 16),
                 fields: [
                   { name: '発生時刻',
-                    value: body.origin_time,
+                    value: ei.origin_time,
                     inline: true },
                   { name: '震央',
-                    value: body.region_name,
+                    value: ei.region_name,
                     inline: true },
                   { name: '深さ',
-                    value: body.depth,
+                    value: ei.depth,
                     inline: true },
                   { name: '強さ(M)',
-                    value: `M${body.magunitude}`,
+                    value: `M${ei.magunitude}`,
                     inline: true },
                   { name: '予想最大震度',
-                    value: `震度${body.calcintensity}`,
+                    value: `震度${ei.calcintensity}`,
                     inline: true }
                 ]
               }
