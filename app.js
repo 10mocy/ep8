@@ -12,8 +12,9 @@ const client = new Discord.Client();
 let eq_list = { };
 
 client.on('ready', () => {
-  console.log(`app[ready] : Logged in as ${client.user.tag}!`);
+  console.log(`app[ready] : logged in as ${client.user.tag}!`);
 
+  console.log(`app[ready] : starting eq steram...`)
   setInterval(() => {
     
     const ei = km();
