@@ -114,7 +114,7 @@ client.on('ready', () => {
         });
 
     })
-  }, 500); // NHK地震情報
+  }, 1000 * 30); // NHK地震情報
 
   client.user.setActivity("日本の地下で眠っています……");
   // client.channels
