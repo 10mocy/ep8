@@ -12,9 +12,11 @@ const notify_channel = '487259165660545036';
 let eq_list = { };
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(`app[ready] : Logged in as ${client.user.tag}!`);
 
   setInterval(() => {
+    console.log(`app[setInterval]`);
+    
     const ei = km();
     // console.log(ei);
 
@@ -22,10 +24,12 @@ client.on('ready', () => {
       // console.log(eq_list);
 
       if(!(ei.report_id in eq_list)) {
+        console.log(`app[setInterval] : new eq`);
         eq_list[ei.report_id] = [];
       }
 
       if(eq_list[ei.report_id].indexOf(ei.report_num) === -1) {
+        console.log(`app[setInterval] : new eq report`);
         eq_list[ei.report_id].push(ei.report_num);
 
         client.channels
