@@ -1,5 +1,5 @@
 require('date-utils');
-const startup_time = new Date();
+const startup_time = (new Date()).toFormat('YYYYMMDDHH24MISS');
 
 const token = require('./config/discord_token');
 const km = require('./lib/km');
@@ -7,7 +7,7 @@ const km = require('./lib/km');
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
-const notify_channel = '487259165660545036';
+const notify_channel = '487171776049315851';
 
 let eq_list = { };
 
@@ -20,6 +20,7 @@ client.on('ready', () => {
 
     if(ei) {
       // console.log(eq_list);
+      if(ei.report_id < startup_time) return; // 起動時の時間より前の発表を無視する(#2)
 
       if(!(ei.report_id in eq_list)) {
         eq_list[ei.report_id] = [];
@@ -60,15 +61,15 @@ client.on('ready', () => {
   }, 500);
 
   client.user.setActivity("日本の地下で眠っています……");
-  client.channels
-    .get(notify_channel)
-    .send(
-      {
-        embed: {
-          color: parseInt("0x00ff00", 16),
-          description: '高度利用者向け地震情報に接続しました。'
-        }
-    });
+  // client.channels
+  //   .get(notify_channel)
+  //   .send(
+  //     {
+  //       embed: {
+  //         color: parseInt("0x00ff00", 16),
+  //         description: '高度利用者向け地震情報に接続しました。'
+  //       }
+  //   });
 });
 
 client.on('message', msg => {
