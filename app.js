@@ -1,32 +1,10 @@
 const token = require('./config/discord_token');
+const km = require('./lib/km');
+
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const request = require('request');
-require('date-utils');
 
 const notify_channel = '487171776049315851';
-
-const eew_info = () => {
-  /* リクエスト用日付データ生成 */
-  const date = new Date();
-  const time = date.toFormat('YYYYMMDDHH24MISS');
-
-  /* リクエスト用データ作成 */
-  const options = {
-    url: `http://www.kmoni.bosai.go.jp/new/webservice/hypo/eew/${time}.json`,
-    method: 'GET',
-    json: true
-  }
-
-  /* リクエスト */
-  request(options, (error, response, body) => {
-    if(body.result.message === '') {
-      return body;
-    } else {
-      return false;
-    }
-  });
-}
 
 let eq_list = { };
 
@@ -35,7 +13,7 @@ client.on('ready', () => {
 
   setInterval(() => {
     let ei;
-    if(ei = eew_info()) {
+    if(ei = km()) {
       if(!(ei.report_id in eq_list)) {
         eq_list[ei.report_id] = [];
       }
