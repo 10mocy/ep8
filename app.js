@@ -95,4 +95,4 @@ client.on('message', msg => {
 });
 
 
-client.login(discord_config.discord_discord_config);
+client.login(discord_config.token);
