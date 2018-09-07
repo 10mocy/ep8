@@ -15,7 +15,7 @@ const { Client, RichEmbed } = require('discord.js');
 const client = new Client();
 
 let eq_list = { };
-let nhkeq_list = '';
+let nhkeq_list = [];
 
 client.on('ready', () => {
   console.log(`app[ready] : Logged in as ${client.user.tag}!`);
@@ -91,7 +91,7 @@ client.on('ready', () => {
             const eq_data = result.Root.Earthquake[0];
 
             // console.log(eq_data.$.Id)
-            if(nhkeq_list === eq_data.$.Id) {
+            if(nhkeq_list.indexOf(eq_data.$.Id) !== -1) {
               // console.log(`nhkeq : skipped duplicate data`);
               return;
             }
@@ -110,7 +110,7 @@ client.on('ready', () => {
                   }
                 }
               );
-            nhkeq_list = eq_data.$.Id;
+            nhkeq_list.push(eq_data.$.Id);
         });
 
     })
@@ -148,6 +148,9 @@ client.on('message', msg => {
               inline: true },
             { name: 'eq_list',
               value: `\`\`\`${JSON.stringify(eq_list)}\`\`\``,
+              inline: true },
+            { name: 'nhkeq_list',
+              value: `\`\`\`${JSON.stringify(nhkeq_list)}\`\`\``,
               inline: true },
             { name: 'discord_config.notify_channel',
               value: discord_config.notify_channel,
