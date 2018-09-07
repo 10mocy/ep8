@@ -99,6 +99,12 @@ client.on('message', msg => {
             inline: true },
           { name: 'eq_list',
             value: `\`\`\`${JSON.stringify(eq_list)}\`\`\``,
+            inline: true },
+          { name: 'discord.notify_channel',
+            value: discord.notify_channel,
+            inline: true },
+          { name: 'discord.control_channel',
+            value: discord.control_channel,
             inline: true }
         ]
       }
