@@ -111,6 +111,8 @@ client.on('message', msg => {
     }
   } else {
     /* どのチャンネルでも実行できるコマンド */
+    // console.log(msg.content);
+
     if(/誰が管理/.test(msg.content)) {
       console.log(`app[message] : 誰が管理`);
       msg.channel.send(`${general_config.owner}さんです！`);
@@ -130,6 +132,20 @@ client.on('message', msg => {
     else if (msg.content === '神') {
       console.log(`app[message] : 神`);
       msg.channel.send('てへへ');
+    }
+    else if (msg.content === 'かわいい') {
+      console.log(`app[message] : かわいい`);
+      msg.channel.send('ありがとうございます！');
+    }
+
+    /* 半分ネタ枠 */
+    else if(/は？/.test(msg.content)) {
+      console.log(`app[message] : は？`);
+      msg.react('🤔');
+    }
+    else if(/[♡❤]/.test(msg.content)) {
+      console.log(`app[message] : :heart:`);
+      msg.react('❤');
     }
   }
 
