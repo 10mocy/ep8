@@ -59,6 +59,11 @@ exports.km = () => {
 exports.nhk = () => {
   nhkeq()
     .then(eq_data => {
+      if(eq_data.$.Epicenter === '') {
+        console.log(`nhkeq : skipped beta report`)
+        return;
+      }
+      
       if(nhkeq_list.indexOf(eq_data.$.Id) !== -1) {
         // console.log(`nhkeq : skipped duplicate data`);
         return;
