@@ -97,7 +97,7 @@ exports.nhk = () => {
 
       console.log('modules.eq[nhk] : new eq')
       discord.client.channels
-        .get('487259165660545036')
+        .get(discord_config.notify_channel)
         .send(
           {
             embed: {
