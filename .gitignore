@@ -73,3 +73,5 @@ typings/
 .serverless
 
 config/discord.js
+
+temp/

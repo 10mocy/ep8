@@ -9,7 +9,7 @@ const discord_config = require('../config/discord');
 const eq = require('../modules/eq');
 const cmd = require('../lib/cmd.js');
 
-module.exports = () => {
+exports.init = () => {
   client.login(discord_config.token);
 
   client.on('ready', () => {
