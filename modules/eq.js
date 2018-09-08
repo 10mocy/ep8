@@ -76,7 +76,8 @@ exports.nhk = () => {
       }
       app.nhkeq_list.push(eq_data.$.Id);
 
-      const timestamp = new Date(eq_data.$.Time);
+      const time = new Date(eq_data.$.Time);
+      const timestamp = time.toFormat('YYYYMMDDHH24MISS');
 
       if(timestamp < app.startup_time) {
         console.log(`modules.eq[nhk] : skipped report of before start up`);
