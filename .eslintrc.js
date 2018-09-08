@@ -13,7 +13,7 @@ module.exports = {
     "prefer-arrow-callback": [ "error", { "allowNamedFunctions": true } ],
     "arrow-parens": ["error", "as-needed"],
     "dot-location": ["error", "property"],
-    "prefer-template": ["error", 2],
+    "prefer-template": 2,
     "object-shorthand": ["error", 2],
     "no-param-reassign": ["error", { "props": true }],
     "no-else-return": "error",
