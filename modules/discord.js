@@ -19,7 +19,7 @@ exports.init = () => {
     eq.km() // 高度利用者向け地震情報
     eq.nhk() // NHK地震情報
     setInterval(eq.km, 500)
-    setInterval(eq.nhk, 1000 * 30)
+    setInterval(eq.nhk, 1000 * 15)
   
     client.user.setActivity('日本の地下で眠っています……')
   })
