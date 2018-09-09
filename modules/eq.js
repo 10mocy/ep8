@@ -1,4 +1,5 @@
 require('date-utils')
+const async = require('async')
 
 const app = require('../app')
 const log = require('../lib/log')
@@ -98,6 +99,16 @@ exports.nhk = () => {
       app.nhkeqList.push(eqData.$.Id)
 
       log('modules.eq[nhk] : new eq')
+
+      const maxIntensityAreaData = eqData.Relative[0].Group[0].Area
+      let maxIntensityArea = `最大震度${eqData.Relative[0].Group[0].$.Intensity}を観測した地域は以下の通りです。`
+      
+      // #region 最大震度を観測した地域を文字列化する
+      async.each(maxIntensityAreaData, area => {
+        maxIntensityArea += `\n・${area.$.Name}`
+      })
+      // #end region
+
       discord.client.channels
         .get(discordConfig.notifyChannel)
         .send(
@@ -105,7 +116,7 @@ exports.nhk = () => {
             embed: {
               color: parseInt('0xff0000', 16),
               title: `NHK地震情報 ${eqData.$.Id}`,
-              description: `${eqData.$.Time}頃、${eqData.$.Epicenter}で、最大震度${eqData.$.Intensity}の揺れを観測する地震がありました。\n震源の深さは${eqData.$.Depth}。地震の規模を示すマグニチュードは、${eqData.$.Magnitude}と推定されています。`,
+              description: `${eqData.$.Time}頃、${eqData.$.Epicenter}で、最大震度${eqData.$.Intensity}の揺れを観測する地震がありました。\n震源の深さは${eqData.$.Depth}。地震の規模を示すマグニチュードは、${eqData.$.Magnitude}と推定されています。\n\n${maxIntensityArea}`,
               image: {
                 url: `https://www3.nhk.or.jp/sokuho/jishin/${eqData.Detail[0]}`
               }
