@@ -4,13 +4,13 @@ const Discord = require('discord.js')
 const client = new Discord.Client()
 exports.client = client
 
-const discord_config = require('../config/discord')
+const discordConfig = require('../config/discord')
 
 const eq = require('../modules/eq')
 const cmd = require('../lib/cmd.js')
 
 exports.init = () => {
-  client.login(discord_config.token)
+  client.login(discordConfig.token)
 
   client.on('ready', () => {
     console.log(`modules.discord[ready] : logged in as ${client.user.tag}!`)
@@ -30,7 +30,7 @@ exports.init = () => {
       return
     }
 
-    if (msg.channel.id === discord_config.control_channel) {
+    if (msg.channel.id === discordConfig.controlChannel) {
       cmd.control(msg) // コントロールコマンド
     } else {
       // console.log(msg.content)
