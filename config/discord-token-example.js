@@ -3,5 +3,6 @@ module.exports = {
   notifyChannel: 'put notify channel unique id here',
   emergencyNotifyChannel: 'put another notify channel unique id here',
   emergencyNotifyCalcintensity: '4' /* put notify of calcintensity (e.g. 4) */,
-  controlChannel: 'put control channel unique id here'
+  controlChannel: 'put control channel unique id here',
+  logChannel:'put channel unique id for sending log here'
 }
