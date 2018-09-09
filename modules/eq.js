@@ -16,14 +16,14 @@ exports.km = () => {
       return
     } // 起動時の時間より前の発表を無視する(#2)
 
-    if(!(ei.report_id in app.eq_list)) {
+    if(!(ei.report_id in app.eqList)) {
       console.log('modules.eq[km] : new eq')
-      app.eq_list[ei.report_id] = []
+      app.eqList[ei.report_id] = []
     }
 
-    if(app.eq_list[ei.report_id].indexOf(ei.report_num) === -1) {
+    if(app.eqList[ei.report_id].indexOf(ei.report_num) === -1) {
       console.log('modules.eq[km] : new eq report')
-      app.eq_list[ei.report_id].push(ei.report_num)
+      app.eqList[ei.report_id].push(ei.report_num)
 
       generateMap()
         .then(imagePath => {
@@ -89,11 +89,11 @@ exports.nhk = () => {
         return
       } // 確定情報でなければ無視する
       
-      if(app.nhkeq_list.indexOf(eqData.$.Id) !== -1) {
+      if(app.nhkeqList.indexOf(eqData.$.Id) !== -1) {
         // console.log('nhkeq : skipped duplicate data')
         return
       }
-      app.nhkeq_list.push(eqData.$.Id)
+      app.nhkeqList.push(eqData.$.Id)
 
       console.log('modules.eq[nhk] : new eq')
       discord.client.channels
