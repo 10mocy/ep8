@@ -1,6 +1,8 @@
 require('date-utils')
 
 const app = require('../app')
+const log = require('../lib/log')
+
 const { km, nhkeq } = require('../lib/eq')
 const generateMap = require('../lib/generate-map')
 
@@ -12,17 +14,17 @@ exports.km = () => {
 
   if(ei) {
     if(ei.report_id < app.startupTime) {
-      // console.log(`modules.eq[km] : skipped report of before start up`)
+      // log(`modules.eq[km] : skipped report of before start up`)
       return
     } // 起動時の時間より前の発表を無視する(#2)
 
     if(!(ei.report_id in app.eqList)) {
-      console.log('modules.eq[km] : new eq')
+      log('modules.eq[km] : new eq')
       app.eqList[ei.report_id] = []
     }
 
     if(app.eqList[ei.report_id].indexOf(ei.report_num) === -1) {
-      console.log('modules.eq[km] : new eq report')
+      log('modules.eq[km] : new eq report')
       app.eqList[ei.report_id].push(ei.report_num)
 
       generateMap()
@@ -80,22 +82,22 @@ exports.nhk = () => {
       const timestamp = time.toFormat('YYYYMMDDHH24MISS')
 
       if(timestamp < app.startupTime) {
-        // console.log(`modules.eq[nhk] : skipped report of before start up`)
+        // log(`modules.eq[nhk] : skipped report of before start up`)
         return
       } // 起動時の時間より前の発表を無視する(#2)
 
       if(eqData.$.Epicenter === '') {
-        console.log('nhkeq : skipped beta report')
+        log('nhkeq : skipped beta report')
         return
       } // 確定情報でなければ無視する
       
       if(app.nhkeqList.indexOf(eqData.$.Id) !== -1) {
-        // console.log('nhkeq : skipped duplicate data')
+        // log('nhkeq : skipped duplicate data')
         return
       }
       app.nhkeqList.push(eqData.$.Id)
 
-      console.log('modules.eq[nhk] : new eq')
+      log('modules.eq[nhk] : new eq')
       discord.client.channels
         .get(discordConfig.notifyChannel)
         .send(

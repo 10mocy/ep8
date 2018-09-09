@@ -1,5 +1,7 @@
 require('date-utils')
 
+const log = require('../lib/log')
+
 const Discord = require('discord.js')
 const client = new Discord.Client()
 exports.client = client
@@ -13,9 +15,9 @@ exports.init = () => {
   client.login(discordConfig.token)
 
   client.on('ready', () => {
-    console.log(`modules.discord[ready] : logged in as ${client.user.tag}!`)
+    log(`modules.discord[ready] : logged in as ${client.user.tag}!`)
     
-    console.log('modules.discord[ready] : starting eq steram...')
+    log('modules.discord[ready] : starting eq steram...')
     eq.km() // 高度利用者向け地震情報
     eq.nhk() // NHK地震情報
     setInterval(eq.km, 500)
@@ -26,14 +28,14 @@ exports.init = () => {
 
   client.on('message', msg => {
     if (msg.author.id === client.user.id) {
-      // console.log(`modules.discord[message] : skipped my message`)
+      // log(`modules.discord[message] : skipped my message`)
       return
     }
 
     if (msg.channel.id === discordConfig.controlChannel) {
       cmd.control(msg) // コントロールコマンド
     } else {
-      // console.log(msg.content)
+      // log(msg.content)
       cmd.general(msg) // どのチャンネルでも実行できるコマンド
     }
   })
