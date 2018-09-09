@@ -1,12 +1,12 @@
 require('date-utils')
 const discord = require('./modules/discord')
 
-let eq_list = { }
-let nhkeq_list = []
+let eqList = { }
+let nhkeqList = []
 
-exports.eq_list = eq_list
-exports.nhkeq_list = nhkeq_list
-exports.startup_time = (new Date()).toFormat('YYYYMMDDHH24MISS')
+exports.eqList = eqList
+exports.nhkeqList = nhkeqList
+exports.startupTime = (new Date()).toFormat('YYYYMMDDHH24MISS')
 
 console.log('app[main] : welcome to ep8!')
 

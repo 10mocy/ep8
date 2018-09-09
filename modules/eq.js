@@ -1,39 +1,42 @@
 require('date-utils')
+const async = require('async')
 
 const app = require('../app')
+const log = require('../lib/log')
+
 const { km, nhkeq } = require('../lib/eq')
-const generate_map = require('../lib/generate_map')
+const generateMap = require('../lib/generate-map')
 
 const discord = require('./discord')
-const discord_config = require('../config/discord')
+const discordConfig = require('../config/discord')
 
 exports.km = () => {
   const ei = km()
 
   if(ei) {
-    if(ei.report_id < app.startup_time) {
-      // console.log(`modules.eq[km] : skipped report of before start up`)
+    if(ei.report_id < app.startupTime) {
+      // log(`modules.eq[km] : skipped report of before start up`)
       return
     } // 起動時の時間より前の発表を無視する(#2)
 
-    if(!(ei.report_id in app.eq_list)) {
-      console.log('modules.eq[km] : new eq')
-      app.eq_list[ei.report_id] = []
+    if(!(ei.report_id in app.eqList)) {
+      log('modules.eq[km] : new eq')
+      app.eqList[ei.report_id] = []
     }
 
-    if(app.eq_list[ei.report_id].indexOf(ei.report_num) === -1) {
-      console.log('modules.eq[km] : new eq report')
-      app.eq_list[ei.report_id].push(ei.report_num)
+    if(app.eqList[ei.report_id].indexOf(ei.report_num) === -1) {
+      log('modules.eq[km] : new eq report')
+      app.eqList[ei.report_id].push(ei.report_num)
 
-      generate_map()
-        .then(image_path => {
-          const send_message = {
+      generateMap()
+        .then(imagePath => {
+          const sendMessage = {
             embed: {
               title: `地震速報(高度利用) 第${ei.report_num}報`,
               color: parseInt('0xff0000', 16),
               fields: [
                 { name: '発生時刻',
-                  value: ei.origin_time,
+                  value: ei.originTime,
                   inline: true },
                 { name: '震央',
                   value: ei.region_name,
@@ -51,20 +54,20 @@ exports.km = () => {
               image: {
                 url: 'attachment://eq.png'
               },
-              files: [{attachment: image_path, name: 'eq.png'}]
+              files: [{attachment: imagePath, name: 'eq.png'}]
             }
           }
 
-          const notify_channel = [discord_config.notify_channel]
+          const notifyChannel = [discordConfig.notifyChannel]
           if(
-            ei.calcintensity >= discord_config.emergency_notify_calcintensity &&
+            ei.calcintensity >= discordConfig.emergency_notifyCalcintensity &&
             ei.report_num === '1'
-          ) notify_channel.push(discord_config.emergency_notify_channel)
+          ) notifyChannel.push(discordConfig.emergency_notifyChannel)
           
-          notify_channel.forEach(channel => {
+          notifyChannel.forEach(channel => {
             discord.client.channels
               .get(channel)
-              .send(send_message)
+              .send(sendMessage)
           })
         }
         )
@@ -75,37 +78,47 @@ exports.km = () => {
 
 exports.nhk = () => {
   nhkeq()
-    .then(eq_data => {
-      const time = new Date(eq_data.$.Time)
+    .then(eqData => {
+      const time = new Date(eqData.$.Time)
       const timestamp = time.toFormat('YYYYMMDDHH24MISS')
 
-      if(timestamp < app.startup_time) {
-        // console.log(`modules.eq[nhk] : skipped report of before start up`)
+      if(timestamp < app.startupTime) {
+        // log(`modules.eq[nhk] : skipped report of before start up`)
         return
       } // 起動時の時間より前の発表を無視する(#2)
 
-      if(eq_data.$.Epicenter === '') {
-        console.log('nhkeq : skipped beta report')
+      if(eqData.$.Epicenter === '') {
+        log('nhkeq : skipped beta report')
         return
       } // 確定情報でなければ無視する
       
-      if(app.nhkeq_list.indexOf(eq_data.$.Id) !== -1) {
-        // console.log('nhkeq : skipped duplicate data')
+      if(app.nhkeqList.indexOf(eqData.$.Id) !== -1) {
+        // log('nhkeq : skipped duplicate data')
         return
       }
-      app.nhkeq_list.push(eq_data.$.Id)
+      app.nhkeqList.push(eqData.$.Id)
 
-      console.log('modules.eq[nhk] : new eq')
+      log('modules.eq[nhk] : new eq')
+
+      const maxIntensityAreaData = eqData.Relative[0].Group[0].Area
+      let maxIntensityArea = `最大震度${eqData.Relative[0].Group[0].$.Intensity}を観測した地域は以下の通りです。`
+      
+      // #region 最大震度を観測した地域を文字列化する
+      async.each(maxIntensityAreaData, area => {
+        maxIntensityArea += `\n・${area.$.Name}`
+      })
+      // #end region
+
       discord.client.channels
-        .get(discord_config.notify_channel)
+        .get(discordConfig.notifyChannel)
         .send(
           {
             embed: {
               color: parseInt('0xff0000', 16),
-              title: `NHK地震情報 ${eq_data.$.Id}`,
-              description: `${eq_data.$.Time}頃、${eq_data.$.Epicenter}で、最大震度${eq_data.$.Intensity}の揺れを観測する地震がありました。\n震源の深さは${eq_data.$.Depth}。地震の規模を示すマグニチュードは、${eq_data.$.Magnitude}と推定されています。`,
+              title: `NHK地震情報 ${eqData.$.Id}`,
+              description: `${eqData.$.Time}頃、${eqData.$.Epicenter}で、最大震度${eqData.$.Intensity}の揺れを観測する地震がありました。\n震源の深さは${eqData.$.Depth}。地震の規模を示すマグニチュードは、${eqData.$.Magnitude}と推定されています。\n\n${maxIntensityArea}`,
               image: {
-                url: `https://www3.nhk.or.jp/sokuho/jishin/${eq_data.Detail[0]}`
+                url: `https://www3.nhk.or.jp/sokuho/jishin/${eqData.Detail[0]}`
               }
             }
           }
