@@ -34,7 +34,7 @@ exports.km = () => {
           color: parseInt('0xff0000', 16),
           fields: [
             { name: '発生時刻',
-              value: ei.originTime,
+              value: ei.origin_time,
               inline: true },
             { name: '震央',
               value: ei.region_name,
