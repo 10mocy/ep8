@@ -28,50 +28,53 @@ exports.km = () => {
       log('modules.eq[km] : new eq report')
       app.eqList[ei.report_id].push(ei.report_num)
 
-      generateMap()
-        .then(imagePath => {
-          const sendMessage = {
-            embed: {
-              title: `地震速報(高度利用) 第${ei.report_num}報`,
-              color: parseInt('0xff0000', 16),
-              fields: [
-                { name: '発生時刻',
-                  value: ei.originTime,
-                  inline: true },
-                { name: '震央',
-                  value: ei.region_name,
-                  inline: true },
-                { name: '深さ',
-                  value: ei.depth,
-                  inline: true },
-                { name: '強さ(M)',
-                  value: `M${ei.magunitude}`,
-                  inline: true },
-                { name: '予想最大震度',
-                  value: `震度${ei.calcintensity}`,
-                  inline: true }
-              ],
-              image: {
-                url: 'attachment://eq.png'
-              },
-              files: [{attachment: imagePath, name: 'eq.png'}]
-            }
-          }
+      let sendMessage = {
+        embed: {
+          title: `地震速報(高度利用) 第${ei.report_num}報`,
+          color: parseInt('0xff0000', 16),
+          fields: [
+            { name: '発生時刻',
+              value: ei.originTime,
+              inline: true },
+            { name: '震央',
+              value: ei.region_name,
+              inline: true },
+            { name: '深さ',
+              value: ei.depth,
+              inline: true },
+            { name: '強さ(M)',
+              value: `M${ei.magunitude}`,
+              inline: true },
+            { name: '予想最大震度',
+              value: `震度${ei.calcintensity}`,
+              inline: true }
+          ]
+        }
+      }
 
-          const notifyChannel = [discordConfig.notifyChannel]
-          if(
-            ei.calcintensity >= discordConfig.emergency_notifyCalcintensity &&
-            ei.report_num === '1'
-          ) notifyChannel.push(discordConfig.emergency_notifyChannel)
-          
-          notifyChannel.forEach(channel => {
-            discord.client.channels
-              .get(channel)
-              .send(sendMessage)
-          })
+      generateMap()
+        .then((err, imagePath) => {
+          sendMessage += {
+            image: {
+              url: 'attachment://eq.png'
+            },
+            files: [{attachment: imagePath, name: 'eq.png'}]
+          }
         }
         )
       
+      const notifyChannel = [discordConfig.notifyChannel]
+      if(
+        ei.calcintensity >= discordConfig.emergency_notifyCalcintensity &&
+        ei.report_num === '1'
+      ) notifyChannel.push(discordConfig.emergency_notifyChannel)
+      
+      notifyChannel.forEach(channel => {
+        discord.client.channels
+          .get(channel)
+          .send(sendMessage)
+      })
+
     }
   }
 }
