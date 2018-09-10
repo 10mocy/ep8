@@ -54,14 +54,14 @@ exports.km = () => {
 
       generateMap()
         .then((err, imagePath) => {
-          sendMessage += {
-            image: {
-              url: 'attachment://eq.png'
-            },
-            files: [{attachment: imagePath, name: 'eq.png'}]
+          sendMessage.image = {
+            url: 'attachment://eq.png'
           }
+          sendMessage.files = [{attachment: imagePath, name: 'eq.png'}]
         }
         )
+      
+      log(JSON.stringify(sendMessage))
       
       const notifyChannel = [discordConfig.notifyChannel]
       if(
