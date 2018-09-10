@@ -2,7 +2,7 @@ require('date-utils')
 const discord = require('./modules/discord')
 
 let eqList = { }
-let nhkeqList = []
+let nhkeqList = [ ]
 
 exports.eqList = eqList
 exports.nhkeqList = nhkeqList

@@ -5,20 +5,22 @@ const discordConfig = require('../config/discord')
 const generalConfig = require('../config/general')
 
 exports.control = msg => {
-  if (/変数出力/.test(msg.content)) {
+  const message = msg.content
+
+  if(message.match(/変数出力/)) {
     log('utils.cmd[control] : 変数出力')
     msg.channel.send({
       embed: {
         color: parseInt('0xffffff', 16),
         description: 'わたしが今持っている変数です！',
         fields: [
-          { name: 'startupTime',
+          { name: 'app.startupTime',
             value: app.startupTime,
             inline: true },
-          { name: 'eqList',
+          { name: 'app.eqList',
             value: `\`\`\`${JSON.stringify(app.eqList)}\`\`\``,
             inline: true },
-          { name: 'nhkeqList',
+          { name: 'app.nhkeqList',
             value: `\`\`\`${JSON.stringify(app.nhkeqList)}\`\`\``,
             inline: true },
           { name: 'discordConfig.notifyChannel',
@@ -37,7 +39,7 @@ exports.control = msg => {
       }
     })
   }
-  else if(/落ちろ/.test(msg.content)) {
+  else if(message.match(/落ちろ/)) {
     log('utils.cmd[control] : 落ちろ')
     msg.channel
       .send('出直してきます！')
@@ -45,7 +47,7 @@ exports.control = msg => {
         process.exit(0)
       })
   }
-  else if(/テスト/.test(msg.content)) {
+  else if(message.match(/テスト/)) {
     const dt = new Date()
     dt.setSeconds(dt.getSeconds() -3)
     const date = dt.toFormat('YYYYMMDD')
@@ -55,23 +57,25 @@ exports.control = msg => {
 }
 
 exports.general = msg => {
-  if(/誰が管理/.test(msg.content)) {
+  const message = msg.content
+
+  if(message.match(/誰が管理/)) {
     log('utils.cmd[general] : 誰が管理')
     msg.channel.send(`${generalConfig.owner}さんです！`)
   }
-  else if(/リポジトリのURL/.test(msg.content)) {
+  else if(message.match(/リポジトリのURL/)) {
     log('utils.cmd[general] : リポジトリのURL')
     msg.channel.send(`${generalConfig.repository} です！`)
   }
-  else if(/問題の報告|機能の追加/.test(msg.content)) {
+  else if(message.match(/問題の報告|機能の追加/)) {
     log('utils.cmd[general] : 問題の報告')
     msg.channel.send(`${generalConfig.issues} からお願いします！`)
   }
-  else if(/変数出力/.test(msg.content)) {
+  else if(message.match(/変数出力/)) {
     log('utils.cmd[general] : 変数出力')
     msg.channel.send('ここで言うのは少し恥ずかしいので、別の場所でお願いします…///')
   }
-  else if(/落ちろ/.test(msg.content)) {
+  else if(message.match(/落ちろ/)) {
     log('utils.cmd[general] : 落ちろ')
     msg.channel.send('Botに落ちろとか言ってるから女子さえ落とせないんですよ！')
   }
