@@ -36,10 +36,7 @@ exports.nhkeq = () => {
       
       xml2js.parseString(nhkeqXml, (err, result) => {
         const url = result.jishinReport.record[0].item[0].$.url
-        const res = request(
-          'GET',
-          url
-        )
+        const res = request('GET', url)
         const buf = Buffer.from(res.getBody())
         const nhkeqXml = iconv.decode(buf, 'Shift_JIS')
         xml2js.parseString(nhkeqXml, (err, result) => {

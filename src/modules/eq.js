@@ -61,7 +61,7 @@ exports.km = () => {
       //   }
       //   )
       
-      log(JSON.stringify(sendMessage))
+      // log(JSON.stringify(sendMessage))
 
       const notifyChannel = [discordConfig.notifyChannel]
       if(
