@@ -5,7 +5,7 @@ const app = require('../app')
 const log = require('../lib/log')
 
 const { km, nhkeq } = require('../lib/eq')
-const generateMap = require('../lib/generate-map')
+// const generateMap = require('../lib/generate-map')
 
 const discord = require('./discord')
 const discordConfig = require('../config/discord')
@@ -52,17 +52,17 @@ exports.km = () => {
         }
       }
 
-      generateMap()
-        .then((err, imagePath) => {
-          sendMessage.image = {
-            url: 'attachment://eq.png'
-          }
-          sendMessage.files = [{attachment: imagePath, name: 'eq.png'}]
-        }
-        )
+      // generateMap()
+      //   .then((err, imagePath) => {
+      //     sendMessage.image = {
+      //       url: 'attachment://eq.png'
+      //     }
+      //     sendMessage.files = [{attachment: imagePath, name: 'eq.png'}]
+      //   }
+      //   )
       
       log(JSON.stringify(sendMessage))
-      
+
       const notifyChannel = [discordConfig.notifyChannel]
       if(
         ei.calcintensity >= discordConfig.emergency_notifyCalcintensity &&
