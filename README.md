@@ -13,7 +13,7 @@
 1. `config/discord.example.js`をコピーし、`config/discord.js`を作成
 1. [Discord Developers Portal](https://discordapp.com/developers/applications/)で生成したトークンを所定の場所に記入
 1. チャンネル定義情報を記入
-1. ディレクトリに移動し、`node src/app`を実行
+1. `npm start`を実行
 
 ## 謝辞
 ### データ利用
