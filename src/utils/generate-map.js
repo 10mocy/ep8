@@ -32,12 +32,12 @@ module.exports = () => new Promise(resolve => {
       { method: 'GET', url: image.url, encoding: null },
       (error, response, body) => {
         if(!error && response.statusCode === 200){
-          log(`lib.generate_map : downloaded ${image.name}`)
+          log(`utils.generate-map : downloaded ${image.name}`)
           fs.writeFileSync(image.path, body, 'binary')
           callback()
         } else {
-          console.log(`lib.generate_map : downloaded error ${image.name} (${response.statusCode}) (${image.url})`)
-          log(`lib.generate_map : downloaded error ${image.name} (${response.statusCode}) (${image.url})`)
+          console.log(`utils.generate-map : downloaded error ${image.name} (${response.statusCode}) (${image.url})`)
+          log(`utils.generate-map : downloaded error ${image.name} (${response.statusCode}) (${image.url})`)
         }
       }
     )
@@ -50,7 +50,7 @@ module.exports = () => new Promise(resolve => {
       .geometry('+0+0')
       .quality(100)
       .write(tempImage, err => {
-        log('lib.generate_map : composited estshindo + acmap')
+        log('utils.generate-map : composited estshindo + acmap')
         if(err) {
           log(err)
         }
@@ -60,7 +60,7 @@ module.exports = () => new Promise(resolve => {
           .geometry('+0+0')
           .quality(100)
           .write(tempImage, err => {
-            log('lib.generate_map : composited layer + ps')
+            log('utils.generate-map : composited layer + ps')
             if(err) {
               log(err)
             }
@@ -70,7 +70,7 @@ module.exports = () => new Promise(resolve => {
               .geometry('+0+0')
               .quality(100)
               .write(eqImage, err => {
-                log('lib.generate_map : composited base + layer')
+                log('utils.generate-map : composited base + layer')
                 if(err) {
                   log(err)
                 }
@@ -82,12 +82,12 @@ module.exports = () => new Promise(resolve => {
                   })
                 })
                 fs.unlink(tempImage, err => {
-                  log('lib.generate_map : unlinked')
+                  log('utils.generate-map : unlinked')
                   if(err) {
                     log(err)
                   }
                 })
-                log('lib.generate_map : done!')
+                log('utils.generate-map : done!')
                 resolve(true, eqImage)
               })
           })

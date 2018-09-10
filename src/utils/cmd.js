@@ -6,7 +6,7 @@ const generalConfig = require('../config/general')
 
 exports.control = msg => {
   if (/変数出力/.test(msg.content)) {
-    log('lib.cmd[control] : 変数出力')
+    log('utils.cmd[control] : 変数出力')
     msg.channel.send({
       embed: {
         color: parseInt('0xffffff', 16),
@@ -38,7 +38,7 @@ exports.control = msg => {
     })
   }
   else if(/落ちろ/.test(msg.content)) {
-    log('lib.cmd[control] : 落ちろ')
+    log('utils.cmd[control] : 落ちろ')
     msg.channel
       .send('出直してきます！')
       .then(() => {
@@ -56,23 +56,23 @@ exports.control = msg => {
 
 exports.general = msg => {
   if(/誰が管理/.test(msg.content)) {
-    log('lib.cmd[general] : 誰が管理')
+    log('utils.cmd[general] : 誰が管理')
     msg.channel.send(`${generalConfig.owner}さんです！`)
   }
   else if(/リポジトリのURL/.test(msg.content)) {
-    log('lib.cmd[general] : リポジトリのURL')
+    log('utils.cmd[general] : リポジトリのURL')
     msg.channel.send(`${generalConfig.repository} です！`)
   }
   else if(/問題の報告|機能の追加/.test(msg.content)) {
-    log('lib.cmd[general] : 問題の報告')
+    log('utils.cmd[general] : 問題の報告')
     msg.channel.send(`${generalConfig.issues} からお願いします！`)
   }
   else if(/変数出力/.test(msg.content)) {
-    log('lib.cmd[general] : 変数出力')
+    log('utils.cmd[general] : 変数出力')
     msg.channel.send('ここで言うのは少し恥ずかしいので、別の場所でお願いします…///')
   }
   else if(/落ちろ/.test(msg.content)) {
-    log('lib.cmd[general] : 落ちろ')
+    log('utils.cmd[general] : 落ちろ')
     msg.channel.send('Botに落ちろとか言ってるから女子さえ落とせないんですよ！')
   }
   
