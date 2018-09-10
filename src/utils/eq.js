@@ -18,7 +18,7 @@ exports.km = () => {
   )
   const body = JSON.parse(res.getBody())
   if(body.result.message === '') {
-    // log(`lib.eq[km] : exist eq data`)
+    // log(`utils.eq[km] : exist eq data`)
     return body
   }
   return false

@@ -1,6 +1,6 @@
 require('date-utils')
 
-const log = require('../lib/log')
+const log = require('../utils/log')
 
 const Discord = require('discord.js')
 const client = new Discord.Client()
@@ -9,7 +9,7 @@ exports.client = client
 const discordConfig = require('../config/discord')
 
 const eq = require('../modules/eq')
-const cmd = require('../lib/cmd.js')
+const cmd = require('../utils/cmd')
 
 exports.init = () => {
   client.login(discordConfig.token)

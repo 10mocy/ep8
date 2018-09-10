@@ -2,10 +2,10 @@ require('date-utils')
 const async = require('async')
 
 const app = require('../app')
-const log = require('../lib/log')
+const log = require('../utils/log')
 
-const { km, nhkeq } = require('../lib/eq')
-// const generateMap = require('../lib/generate-map')
+const { km, nhkeq } = require('../utils/eq')
+// const generateMap = require('../utils/generate-map')
 
 const discord = require('./discord')
 const discordConfig = require('../config/discord')

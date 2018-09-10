@@ -72,6 +72,5 @@ typings/
 # Serverless directories
 .serverless
 
-config/discord.js
-
 temp/
+src/config/discord.js
