@@ -16,6 +16,7 @@ module.exports = class Earthquake extends EventEmitter {
 
     this.existKyoshin = { }
     this.existNHK = [ ]
+    this.startupTime = (new Date()).toFormat('YYYYMMDDHH24MISS')
 
   }
 
@@ -81,6 +82,10 @@ module.exports = class Earthquake extends EventEmitter {
 
         const eqData = result.Root.Earthquake[0]
         const eqDetailData = eqData.$
+        const eqTime = (new Date(eqDetailData.Time)).toFormat('YYYYMMDDHH24MISS')
+
+        // 起動時間の前に発表された情報をスキップする
+        if(eqTime < this.startupTime) return
 
         // データがベータ情報だったらスキップする
         // (震源情報が空文字列になっていることを利用している)
