@@ -27,8 +27,6 @@ module.exports = class Earthquake extends EventEmitter {
     setInterval(() => self._kyoshin(), 500)
     setInterval(() => self._nhk(), 1500)
 
-    console.log('[earthquake] this is start')
-
     this.emit('start')
 
   }
