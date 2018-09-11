@@ -51,7 +51,9 @@ module.exports = class Earthquake extends EventEmitter {
 
       // 過去に同じ報(report_num)を処理していたらスキップする
       if(this.existKyoshin[body.report_id].indexOf(body.report_num) !== -1) return
-      this.existKyoshin[body.report_id].push(body.report_id)
+      this.existKyoshin[body.report_id].push(body.report_num)
+
+      //TODO : ここに強震モニタの画像を生成する処理を書く
 
       // データをエミットする
       this.emit('kyoshin', body)
