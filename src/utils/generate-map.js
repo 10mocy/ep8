@@ -8,12 +8,12 @@ const request = require('request')
 const fs = require('fs')
 
 module.exports = () => new Promise(resolve => {
-  // const dt = new Date('2018/09/08 01:28:31')
+  // const dt = new Date('2018/09/11/ 19:11:08')
   const dt = new Date()
   dt.setSeconds(dt.getSeconds() -3)
   const date = dt.toFormat('YYYYMMDD')
   const time = dt.toFormat('YYYYMMDDHH24MISS')
-  log(date, time)
+  // log(date, time)
 
   const tempDir = './temp'
   const tempImage = `${tempDir}/layer.gif`
@@ -88,7 +88,8 @@ module.exports = () => new Promise(resolve => {
                   }
                 })
                 log('utils.generate-map : done!')
-                resolve(true, eqImage)
+                // console.log(eqImage)
+                resolve({err: true, path: eqImage})
               })
           })
       })
