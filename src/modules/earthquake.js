@@ -80,9 +80,12 @@ module.exports = class Earthquake extends EventEmitter {
 
       xml2js.parseString(nhkeqXml, (err, result) => {
 
-        const eqData = result.Root.Earthquake[0]
+        const eqRoot = result.Root
+        const eqData = eqRoot.Earthquake[0]
+        const eqTime = new Date(eqRoot.Timestamp[0]).toFormat('YYYYMMDDHH24MISS')
         const eqDetailData = eqData.$
-        const eqTime = (new Date(eqDetailData.Time)).toFormat('YYYYMMDDHH24MISS')
+
+        // console.log(eqTime, this.startupTime)
 
         // 起動時間の前に発表された情報をスキップする
         if(eqTime < this.startupTime) return
