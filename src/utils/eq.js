@@ -6,9 +6,8 @@ const xml2js = require('xml2js')
 
 exports.km = () => {
   /* リクエスト用日付データ生成 */
-  // const date = new Date('2018/09/08 01:28:31')
+  // const date = new Date('2018/09/11/ 19:11:08')
   const date = new Date()
-  // const date = new Date()
   const time = date.toFormat('YYYYMMDDHH24MISS')
 
   /* リクエスト */
