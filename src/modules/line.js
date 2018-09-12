@@ -13,7 +13,7 @@ exports.sendMessage = message => {
     method: 'POST',
     headers,
     json: {
-      to: 'Uf991457fd0a22066fb8f0ee97e4c8f2c',
+      to: lineConfig.sendId,
       messages: [
         { type: 'text', text: message }
       ]
