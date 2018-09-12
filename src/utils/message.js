@@ -34,6 +34,7 @@ exports.formatKyoshin = data => {
 
   let discord = def, slack = def, line = def, misskey = def
 
+  // Discord用データの定義
   discord = {
     embed: {
       title: `地震速報(高度利用) 第${data.report_num}報`,
@@ -57,5 +58,40 @@ exports.formatKyoshin = data => {
       ]
     }
   }
+
   return { discord, slack, line, misskey }
+
+}
+
+exports.formatNHK = data => {
+
+  let def
+  
+  const maxIntensityAreaData = data.Relative[0].Group[0].Area
+  let maxIntensityArea = `最大震度${data.Relative[0].Group[0].$.Intensity}を観測した地域は以下の通りです。`
+  
+  // #region 最大震度を観測した地域を文字列化する
+  maxIntensityAreaData.forEach(area => {
+    maxIntensityArea += `\n・${area.$.Name}`
+  })
+  // #end region
+
+  const message = `${data.$.Time}頃、${data.$.Epicenter}で、最大震度${data.$.Intensity}の揺れを観測する地震がありました。\n震源の深さは${data.$.Depth}。地震の規模を示すマグニチュードは、${data.$.Magnitude}と推定されています。\n\n${maxIntensityArea}`
+  def  = `【NHK地震情報 ${data.$.Id}】\n${message}`
+
+  let discord = def, slack = def, line = def, misskey = def
+
+  discord = {
+    embed: {
+      color: parseInt('0xff0000', 16),
+      title: `NHK地震情報 ${data.$.Id}`,
+      description: message,
+      image: {
+        url: `https://www3.nhk.or.jp/sokuho/jishin/${data.Detail[0]}`
+      }
+    }
+  }
+
+  return { discord, slack, line, misskey }
+
 }

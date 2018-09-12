@@ -19,9 +19,10 @@ eq.on('kyoshin', data => {
 
 eq.on('nhk', data => {
 
-  Message.broadcast('test')
+  Message.broadcast(Message.formatNHK(data))
 
-  console.log(data)
+  console.log('[app] nhk > new earthquake report')
+
 })
 
 eq.on('data', message => console.log(`[app] data > ${message}`))
