@@ -68,15 +68,16 @@ exports.formatNHK = data => {
   let def
   
   const maxIntensityAreaData = data.Relative[0].Group[0].Area
-  let maxIntensityArea = `最大震度${data.Relative[0].Group[0].$.Intensity}を観測した地域は以下の通りです。`
-  
+  let maxIntensityAreaMessage = `最大震度${data.Relative[0].Group[0].$.Intensity}を観測した地域は以下の通りです。`
+  let maxIntensityArea = ''
+
   // #region 最大震度を観測した地域を文字列化する
   maxIntensityAreaData.forEach(area => {
     maxIntensityArea += `\n・${area.$.Name}`
   })
   // #end region
 
-  const message = `${data.$.Time}頃、${data.$.Epicenter}で、最大震度${data.$.Intensity}の揺れを観測する地震がありました。\n震源の深さは${data.$.Depth}。地震の規模を示すマグニチュードは、${data.$.Magnitude}と推定されています。\n\n${maxIntensityArea}`
+  const message = `${data.$.Time}頃、${data.$.Epicenter}で、最大震度${data.$.Intensity}の揺れを観測する地震がありました。\n震源の深さは${data.$.Depth}。地震の規模を示すマグニチュードは、${data.$.Magnitude}と推定されています。\n${maxIntensityAreaMessage}${maxIntensityArea}`
   def  = `【NHK地震情報 ${data.$.Id}】\n${message}`
 
   let discord = def, slack = def, line = def, misskey = def
@@ -85,7 +86,26 @@ exports.formatNHK = data => {
     embed: {
       color: parseInt('0xff0000', 16),
       title: `NHK地震情報 ${data.$.Id}`,
-      description: message,
+      fields: [
+        { name: '発生時刻',
+          value: data.$.Time,
+          inline: true },
+        { name: '震央',
+          value: data.$.Epicenter,
+          inline: true },
+        { name: '深さ',
+          value: data.$.Depth,
+          inline: true },
+        { name: '強さ(M)',
+          value: `M${data.$.Magnitude}`,
+          inline: true },
+        { name: '最大震度',
+          value: `震度${data.$.Intensity}`,
+          inline: true },
+        { name: `最大震度${data.$.Intensity}を観測した地域`,
+          value: maxIntensityArea,
+          inline: true }
+      ],
       image: {
         url: `https://www3.nhk.or.jp/sokuho/jishin/${data.Detail[0]}`
       }
