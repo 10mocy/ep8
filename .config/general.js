@@ -5,7 +5,7 @@ module.exports = {
   services: {
     discord: true,
     slack: false,
-    misskey: false,
-    line: false
+    line: true,
+    misskey: false
   }
 }
