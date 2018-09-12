@@ -27,7 +27,9 @@ exports.sendMessage = message => {
       .send(message)
 
   } else {
+
     console.log('[modules.discord] sendMessage > !isLogin')
+    
   }
 
 }
