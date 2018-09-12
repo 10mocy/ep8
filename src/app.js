@@ -1,13 +1,30 @@
-require('date-utils')
-const discord = require('./modules/discord')
+const Earthquake = require('./modules/earthquake')
+const Message = require('./utils/message')
 
-let eqList = { }
-let nhkeqList = [ ]
+const eq = new Earthquake()
 
-exports.eqList = eqList
-exports.nhkeqList = nhkeqList
-exports.startupTime = (new Date()).toFormat('YYYYMMDDHH24MISS')
+eq.on('start', () => {
 
-console.log('app[main] : welcome to ep8!')
+  console.log('[app] start > welcome to ep8!')
 
-discord.init()
+})
+
+eq.on('kyoshin', data => {
+
+  Message.broadcast(Message.formatKyoshin(data))
+
+  console.log('[app] kyoshin > new earthquake report')
+
+})
+
+eq.on('nhk', data => {
+
+  Message.broadcast(Message.formatNHK(data))
+
+  console.log('[app] nhk > new earthquake report')
+
+})
+
+eq.on('data', message => console.log(`[app] data > ${message}`))
+
+eq.start()
