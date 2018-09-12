@@ -16,6 +16,7 @@ module.exports = class Earthquake extends EventEmitter {
 
     this.existKyoshin = { }
     this.existNHK = [ ]
+
     this.startupTime = (new Date()).toFormat('YYYYMMDDHH24MISS')
 
   }
@@ -33,6 +34,7 @@ module.exports = class Earthquake extends EventEmitter {
 
   _kyoshin() {
 
+    // const date = new Date('2016/04/14 21:26:42')
     const date = new Date()
     const time = date.toFormat('YYYYMMDDHH24MISS')
 
