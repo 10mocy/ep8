@@ -20,7 +20,7 @@ exports.sendMessage = message => {
 
   if(isLogin) {
 
-    console.log('[modules.discord] sendMessage > isLogin')
+    // console.log('[modules.discord] sendMessage > isLogin')
 
     discord.channels
       .get(discordConfig.notifyChannel)
@@ -28,7 +28,7 @@ exports.sendMessage = message => {
 
   } else {
 
-    console.log('[modules.discord] sendMessage > !isLogin')
+    console.error('[modules.discord] sendMessage > !isLogin')
     
   }
 
