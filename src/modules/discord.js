@@ -14,6 +14,7 @@ discord.on('ready', () => {
 })
 
 discord.on('message', () => {})
+discord.on('error', console.error)
 
 exports.sendMessage = message => {
 

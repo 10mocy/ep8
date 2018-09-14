@@ -38,74 +38,89 @@ module.exports = class Earthquake extends EventEmitter {
     const date = new Date()
     const time = date.toFormat('YYYYMMDDHH24MISS')
 
-    const res = request(
-      'GET',
-      `http://www.kmoni.bosai.go.jp/new/webservice/hypo/eew/${time}.json`
-    )
-    const body = JSON.parse(res.getBody())
+    try {
 
-    if(body.result.message === '') {
-      
-      // 過去に同じ地震(report_id)がなかった時の処理
-      if(!(body.report_id in this.existKyoshin)) {
-        this.existKyoshin[body.report_id] = []
+      const res = request(
+        'GET',
+        `http://www.kmoni.bosai.go.jp/new/webservice/hypo/eew/${time}.json`,
+        () => {}
+      )
+      const body = JSON.parse(res.getBody())
+
+      if(body.result.message === '') {
+          
+        // 過去に同じ地震(report_id)がなかった時の処理
+        if(!(body.report_id in this.existKyoshin)) {
+          this.existKyoshin[body.report_id] = []
+        }
+
+        // 過去に同じ報(report_num)を処理していたらスキップする
+        if(this.existKyoshin[body.report_id].indexOf(body.report_num) !== -1) return
+        this.existKyoshin[body.report_id].push(body.report_num)
+
+        //TODO : ここに強震モニタの画像を生成する処理を書く
+
+        // データをエミットする
+        this.emit('kyoshin', body)
+
       }
 
-      // 過去に同じ報(report_num)を処理していたらスキップする
-      if(this.existKyoshin[body.report_id].indexOf(body.report_num) !== -1) return
-      this.existKyoshin[body.report_id].push(body.report_num)
+    }
+    catch(err) {
 
-      //TODO : ここに強震モニタの画像を生成する処理を書く
-
-      // データをエミットする
-      this.emit('kyoshin', body)
+      console.error(err)
 
     }
-
   }
-
   _nhk() {
 
-    const res = request(
-      'GET',
-      'http://www3.nhk.or.jp/sokuho/jishin/data/JishinReport.xml'
-    )
-    const buf = Buffer.from(res.getBody())
-    const nhkeqXml = iconv.decode(buf, 'Shift_JIS')
+    try {
 
-    xml2js.parseString(nhkeqXml, (err, result) => {
-
-      const url = result.jishinReport.record[0].item[0].$.url
-      const res = request('GET', url)
+      const res = request(
+        'GET',
+        'http://www3.nhk.or.jp/sokuho/jishin/data/JishinReport.xml'
+      )
       const buf = Buffer.from(res.getBody())
       const nhkeqXml = iconv.decode(buf, 'Shift_JIS')
 
       xml2js.parseString(nhkeqXml, (err, result) => {
 
-        const eqRoot = result.Root
-        const eqData = eqRoot.Earthquake[0]
-        const eqTime = new Date(eqRoot.Timestamp[0]).toFormat('YYYYMMDDHH24MISS')
-        const eqDetailData = eqData.$
+        const url = result.jishinReport.record[0].item[0].$.url
+        const res = request('GET', url)
+        const buf = Buffer.from(res.getBody())
+        const nhkeqXml = iconv.decode(buf, 'Shift_JIS')
 
-        // console.log(eqTime, this.startupTime)
+        xml2js.parseString(nhkeqXml, (err, result) => {
 
-        // 起動時間の前に発表された情報をスキップする
-        if(eqTime < this.startupTime) return
+          const eqRoot = result.Root
+          const eqData = eqRoot.Earthquake[0]
+          const eqTime = new Date(eqRoot.Timestamp[0]).toFormat('YYYYMMDDHH24MISS')
+          const eqDetailData = eqData.$
 
-        // データがベータ情報だったらスキップする
-        // (震源情報が空文字列になっていることを利用している)
-        if(eqDetailData.Epicenter === '') return
+          // console.log(eqTime, this.startupTime)
 
-        // 過去に同じ地震(eqData.$.Id)を処理していたらスキップする
-        if(this.existNHK.indexOf(eqDetailData.Id) !== -1) return
-        this.existNHK.push(eqDetailData.Id)
+          // 起動時間の前に発表された情報をスキップする
+          if(eqTime < this.startupTime) return
 
-        this.emit('nhk', eqData)
+          // データがベータ情報だったらスキップする
+          // (震源情報が空文字列になっていることを利用している)
+          if(eqDetailData.Epicenter === '') return
+
+          // 過去に同じ地震(eqData.$.Id)を処理していたらスキップする
+          if(this.existNHK.indexOf(eqDetailData.Id) !== -1) return
+          this.existNHK.push(eqDetailData.Id)
+
+          this.emit('nhk', eqData)
+
+        })
 
       })
+    }
+    catch(err) {
+      
+      console.error(err)
 
-    })
-
+    }
   }
 
 }
